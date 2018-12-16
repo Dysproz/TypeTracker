@@ -1,5 +1,5 @@
 import pandas as pd
-
+from datetime import datetime
 
 def get_total_seconds_series(timeseries):
     return 3600*timeseries.dt.hour + \
@@ -12,6 +12,10 @@ def get_total_seconds_timestamp(timeseries):
            60*timeseries.minute + \
            timeseries.second
 
+def proper_timestamp(time):
+    time = int(time)
+    time_formated = datetime.fromtimestamp(time // 1000000000)
+    return time_formated
 
 def get_data_within_time(df, min_time='00:00:00', max_time='23:59:59'):
     """
@@ -20,7 +24,6 @@ def get_data_within_time(df, min_time='00:00:00', max_time='23:59:59'):
     total_min = get_total_seconds_timestamp(pd.to_datetime(min_time))
     total_max = get_total_seconds_timestamp(pd.to_datetime(max_time))
     df_seconds = get_total_seconds_series(df['time'])
-
     return df.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
 
 
@@ -41,9 +44,11 @@ def get_typing_speed_over_time(df_filtered):
     """
     times = sorted(df_filtered['time'].unique())
     cpm = []
+    times_formated = []
     for time in times:
         cpm.append(sum(df_filtered.loc[df_filtered['time'] == time, 'counts']))
-    return times, cpm
+        times_formated.append(proper_timestamp(time))
+    return times_formated, cpm
 
 
 def get_character_sum(df_filtered):
