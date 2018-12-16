@@ -7,9 +7,12 @@ from viz_functions import *
 import plotly.graph_objs as go
 
 
-data = pd.read_csv('test_data')
+data = pd.read_csv('data/typer_{}.csv'.format(str(dt.now().strftime("%Y-%m-%d"))))
 data.columns = ['time', 'character', 'counts']
 data['time'] = pd.to_datetime(data['time'])
+# data = pd.read_csv('test_data')
+# data.columns = ['time', 'character', 'counts']
+# data['time'] = pd.to_datetime(data['time'])
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -46,6 +49,7 @@ app.layout = html.Div([
                     id='time-from',
                     type='time',
                     placeholder='HH:MM:SS',
+                    value='00:00:00',
                     n_submit=0
                 ),
 
@@ -55,6 +59,7 @@ app.layout = html.Div([
                     id='time-to',
                     type='time',
                     placeholder='HH:MM:SS',
+                    value='23:59:59',
                     n_submit=0
                 ),
 
@@ -113,11 +118,16 @@ def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[
             x=x,
             y=y,
             mode='lines+markers'
-        )]
+        )],
+        'layout': {
+            'xaxis': {'title': 'Time'},
+            'yaxis': {'title': 'CPM'}
+
+        }
     }
 
 
-def create_character_barchart(data_in, min_time, max_time, axist_type, title):
+def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=[]):
     x, y = get_character_sum(
                 get_data_within_time(data_in, min_time=min_time, max_time=max_time))
     return{
@@ -133,7 +143,7 @@ def create_character_barchart(data_in, min_time, max_time, axist_type, title):
     [Input('date-submit-button', 'n_clicks')],
     [State('single-date-picker', 'date')])
 def update_date(n_clicks, input_date):
-    data =pd.read_csv('data/typer_{}.csv'.format(str(input_date)))
+    data = pd.read_csv('data/typer_{}.csv'.format(str(input_date)))
     data.columns = ['time', 'character', 'counts']
     data['time'] = pd.to_datetime(data['time'])
 
@@ -155,6 +165,14 @@ def update_time(n_clicks, time_from, time_to):
     [State('time-from', 'value'), State('time-to', 'value')])
 def update_typing_timesteries(n_clicks, time_from, time_to):
     return create_typing_timeseries(data, min_time=time_from, max_time=time_to)
+
+
+@app.callback(
+    Output('character-use', 'figure'),
+    [Input('time-submit-button', 'n_clicks')],
+    [State('time-from', 'value'), State('time-to', 'value')])
+def update_typing_timesteries(n_clicks, time_from, time_to):
+    return create_character_barchart(data, min_time=time_from, max_time=time_to)
 
 
 if __name__ == '__main__':
