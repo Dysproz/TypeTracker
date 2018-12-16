@@ -2,3 +2,7 @@ pynput
 Flask
 flake8
 tox
+dash
+dash_core_components
+dash_html_components
+pandas
