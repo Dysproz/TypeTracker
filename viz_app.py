@@ -134,7 +134,12 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
         'data': [go.Bar(
             x=x,
             y=y,
-        )]
+        )],
+        'layout': {
+            'xaxis': {'title': 'Character / function'},
+            'yaxis': {'title': 'Usage'}
+
+        }
     }
 
 
