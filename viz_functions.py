@@ -13,7 +13,7 @@ def get_total_seconds_timestamp(timeseries):
            timeseries.second
 
 
-def get_data_within_time(min_time, max_time, df):
+def get_data_within_time(df, min_time='00:00:00', max_time='23:59:59'):
     """
     get all data within specified time
     """
@@ -28,9 +28,9 @@ def get_average_typing_speed_overall(df_filtered):
     """
     calculate average typing speed of all characters in characters per minute
     """
-    time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds()
+    time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + 60  # 60 is the 60 of gathering data
 
-    return sum(df_filtered['count'])/max((time_diff/60), 1)
+    return sum(df_filtered['counts'])/(time_diff/60.)
 
 
 def get_typing_speed_over_time(df_filtered):
@@ -39,9 +39,11 @@ def get_typing_speed_over_time(df_filtered):
     :param df_filtered:
     :return:
     """
-    # TODO
-    
-    pass
+    times = sorted(df_filtered['time'].unique())
+    cpm = []
+    for time in times:
+        cpm.append(sum(df_filtered.loc[df_filtered['time'] == time, 'counts']))
+    return times, cpm
 
 
 def get_character_sum(df_filtered):
@@ -51,7 +53,6 @@ def get_character_sum(df_filtered):
     characters = sorted(df_filtered['character'].unique())
     counts = []
     for character in characters:
-        counts.append(sum(df_filtered.loc[
-                              df_filtered['character'] == character, 'counts']))
+        counts.append(sum(df_filtered.loc[df_filtered['character'] == character, 'counts']))
 
     return characters, counts
