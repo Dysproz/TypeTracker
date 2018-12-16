@@ -27,24 +27,44 @@ class KeyListener:
         self.recorder = recorder
 
     def on_release_keyboard(self, key):
-        self.recorder.append_data(str(key))
+        if str(key) in self.special_keys:
+            key_formated = self.special_keys[str(key)]
+        else:
+            key_formated = str(key)
+            if key_formated[:2] == "u'":
+                key_formated = key_formated[2:-1]
+        self.recorder.append_data(key_formated)
 
     def listen(self):
         with keyboard.Listener(on_release=self.on_release_keyboard) as keyboard_listener:
             keyboard_listener.join()
 
+    @property
+    def special_keys(self):
+        return {'<65437>': 5,
+                '<65027>': 'Key.alt_r',
+                '<269025026>': 'Key.brightnes_up',
+                '<269025027>': 'Key.brightnes_down',
+                '<269025167>': 'Key.no_camera',
+                '<0>': 'Key.airplane',
+                '<269025202>' : 'Key.close_window',
+                '<269025043>': 'Key.volume_up',
+                '<269025041>': 'Key.volume_down',
+                '<269025042>': 'Key.mute',
+                '<269025047>': 'Key.next_track',
+                '<269025046>': 'Key.previous_track',
+                '<269025044>': 'Key.play_pause'
+                }
 
 class MouseListener:
     def __init__(self, recorder):
         self.recorder = recorder
 
     def on_click_mouse(self, x ,y ,button, pressed):
-        print(button)
         if not pressed:
             self.recorder.append_data(button)
 
     def on_scroll_mouse(self, x, y, dx, dy):
-        print('scroll')
         self.recorder.append_data('scroll')
 
     def listen(self):
@@ -75,6 +95,7 @@ class DataSaver:
             if (datetime.now()-timer).seconds >= self.save_time:
                 self.save_data(timer)
                 timer = datetime.now()
+
 
 if __name__ == '__main__':
     SAVE_TIME = 60
