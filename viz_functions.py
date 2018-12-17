@@ -3,6 +3,47 @@ from datetime import datetime
 import sys
 import os
 
+
+class DataHolder:
+    def __init__(self):
+        self.start_date = datetime.strptime('2018-12-16', '%Y-%m-%d')
+        self.end_date = datetime.strptime('2018-12-15', '%Y-%m-%d')
+
+    def get_data_for_date_range(self, start, end):
+        """
+        Iterate through data filenames and get files that match date range
+        """
+        path = './data'
+        files = [i for i in os.listdir(path) if i.startswith('typer_')]
+        files_dates = []
+        for file in files:
+            file_date = file[file.index('typer_')+len('typer_'):file.index('.csv')]
+            files_dates.append(datetime.strptime(file_date, '%Y-%m-%d'))
+        selected_dates = []
+        for date in files_dates:
+            if date >= start and date <= end:
+                selected_dates.append(date)
+        data = pd.DataFrame(columns=['time', 'character', 'counts'])
+        for date in selected_dates:
+            data.append(pd.read_csv('data/typer_{d}.csv'.format(d=date.strftime('%Y-%m-%d'))))
+        data['time'] = pd.to_datetime(data['time'])
+        return data
+
+    def set_data_ranges(self, start, end):
+        if isinstance(start, basestring):
+            start_date = datetime.strptime(str(start.split()[0]), '%Y-%m-%d')
+        if isinstance(end, basestring):
+            end_date = datetime.strptime(str(end.split()[0]), '%Y-%m-%d')
+        self.start_date = start
+        self.end_date = end
+        print('start: {}'.format(self.start_date))
+        print('end: {}'.format(self.end_date))
+
+    @property
+    def data(self):
+        print('data touched')
+        return self.get_data_for_date_range(self.start_date, self.end_date)
+
 def get_total_seconds_series(timeseries):
     return 3600*timeseries.dt.hour + \
            60*timeseries.dt.minute + \
@@ -33,7 +74,11 @@ def get_average_typing_speed_overall(df_filtered):
     """
     calculate average typing speed of all characters in characters per minute
     """
-    time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + 60  # 60 is the 60 of gathering data
+    try:
+        time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + 60  # 60 is the 60 of gathering data
+    except ValueError:
+        time_diff = 0
+        return 0
 
     return sum(df_filtered['counts'])/(time_diff/60.)
 
@@ -63,23 +108,3 @@ def get_character_sum(df_filtered):
         counts.append(sum(df_filtered.loc[df_filtered['character'] == character, 'counts']))
 
     return characters, counts
-
-def get_data_for_date_range(start, end):
-    """
-    Iterate through data filenames and get files that match date range
-    """
-    path = './data'
-    files = [i for i in os.listdir(path) if i.startswith('typer_')]
-    files_dates = []
-    for file in files:
-        file_date = file[file.index('typer_')+len('typer_'):file.index('.csv')]
-        files_dates.append(datetime.strptime(file_date, '%Y-%m-%d'))
-    selected_dates = []
-    for date in files_dates:
-        if date >= start and date <= end:
-            selected_dates.append(date)
-    data = pd.DataFrame(columns=['time', 'character', 'counts'])
-    for date in selected_dates:
-        data.append(pd.read_csv('data/typer_{d}.csv'.format(d=date.strftime('%Y-%m-%d'))))
-    data['time'] = pd.to_datetime(data['time'])
-    return data

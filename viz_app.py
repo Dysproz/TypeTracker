@@ -6,13 +6,7 @@ from dash.dependencies import Input, Output, State
 from viz_functions import *
 import plotly.graph_objs as go
 
-
-data = pd.read_csv('data/typer_2018-12-16.csv'.format(str(dt.now().strftime("%Y-%m-%d"))))
-data.columns = ['time', 'character', 'counts']
-data['time'] = pd.to_datetime(data['time'])
-# data = pd.read_csv('test_data')
-# data.columns = ['time', 'character', 'counts']
-# data['time'] = pd.to_datetime(data['time'])
+data = DataHolder()
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -75,7 +69,7 @@ app.layout = html.Div([
             html.Div(
                 id='typing-speed-summary',
                 children='Average typing speed: {: .2f} Characters Per Minute.'.format(
-                    get_average_typing_speed_overall(get_data_within_time(data))
+                    get_average_typing_speed_overall(get_data_within_time(data.data))
                 )),
             # TODO: add info button
 
@@ -149,7 +143,7 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
 def update_date(n_clicks, start_date, end_date):
     start_date = dt.strptime(str(start_date.split()[0]), '%Y-%m-%d')
     end_date = dt.strptime(str(end_date.split()[0]), '%Y-%m-%d')
-    data = get_data_for_date_range(start_date, end_date)
+    data.set_data_ranges(start_date, end_date)
     return u'Selected date range: {start} - {end}'.format(start=str(start_date).split()[0], end=str(end_date).split()[0])
 
 
@@ -164,19 +158,20 @@ def update_time(n_clicks, time_from, time_to):
 
 @app.callback(
     Output('typing-speed-timeseries', 'figure'),
-    [Input('time-submit-button', 'n_clicks')],
+    [Input('time-submit-button', 'n_clicks'),
+     Input('date-submit-button', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries(n_clicks, time_from, time_to):
-    return create_typing_timeseries(data, min_time=time_from, max_time=time_to)
+def update_typing_timesteries(t_n_clicks, d_n_clicks, time_from, time_to):
+    return create_typing_timeseries(data.data, min_time=time_from, max_time=time_to)
 
 
 @app.callback(
     Output('character-use', 'figure'),
-    [Input('time-submit-button', 'n_clicks')],
+    [Input('time-submit-button', 'n_clicks'),
+     Input('date-submit-button', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries(n_clicks, time_from, time_to):
-    return create_character_barchart(data, min_time=time_from, max_time=time_to)
-
+def update_typing_timesteries(t_n_clicks, d_n_clicks, time_from, time_to):
+    return create_character_barchart(data.data, min_time=time_from, max_time=time_to)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
