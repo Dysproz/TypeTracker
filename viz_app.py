@@ -161,7 +161,7 @@ def update_time(n_clicks, time_from, time_to):
     [Input('time-submit-button', 'n_clicks'),
      Input('date-submit-button', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries(t_n_clicks, d_n_clicks, time_from, time_to):
+def update_typing_timesteries_typing_speed(t_n_clicks, d_n_clicks, time_from, time_to):
     return create_typing_timeseries(data.data, min_time=time_from, max_time=time_to)
 
 
@@ -170,7 +170,7 @@ def update_typing_timesteries(t_n_clicks, d_n_clicks, time_from, time_to):
     [Input('time-submit-button', 'n_clicks'),
      Input('date-submit-button', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries(t_n_clicks, d_n_clicks, time_from, time_to):
+def update_typing_timesteries_character_use(t_n_clicks, d_n_clicks, time_from, time_to):
     return create_character_barchart(data.data, min_time=time_from, max_time=time_to)
 
 if __name__ == '__main__':
