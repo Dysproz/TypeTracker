@@ -126,9 +126,19 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
         'data': [go.Bar(
             x=x,
             y=y,
+            text=x,
+            textposition= 'auto',
+            marker=dict(
+                color='rgb(158,202,225)',
+                line=dict(
+                    color='rgb(8,48,107)',
+                    width=1.5),
+            ),
+            opacity=0.6
         )],
         'layout': {
-            'xaxis': {'title': 'Character / function'},
+            'xaxis': {'title': 'Character / function',
+                      'showticklabels': False},
             'yaxis': {'title': 'Usage'}
 
         }
