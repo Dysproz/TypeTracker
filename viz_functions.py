@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime
+import sys
+import os
 
 def get_total_seconds_series(timeseries):
     return 3600*timeseries.dt.hour + \
@@ -61,3 +63,23 @@ def get_character_sum(df_filtered):
         counts.append(sum(df_filtered.loc[df_filtered['character'] == character, 'counts']))
 
     return characters, counts
+
+def get_data_for_date_range(start, end):
+    """
+    Iterate through data filenames and get files that match date range
+    """
+    path = './data'
+    files = [i for i in os.listdir(path) if i.startswith('typer_')]
+    files_dates = []
+    for file in files:
+        file_date = file[file.index('typer_')+len('typer_'):file.index('.csv')]
+        files_dates.append(datetime.strptime(file_date, '%Y-%m-%d'))
+    selected_dates = []
+    for date in files_dates:
+        if date >= start and date <= end:
+            selected_dates.append(date)
+    data = pd.DataFrame(columns=['time', 'character', 'counts'])
+    for date in selected_dates:
+        data.append(pd.read_csv('data/typer_{d}.csv'.format(d=date.strftime('%Y-%m-%d'))))
+    data['time'] = pd.to_datetime(data['time'])
+    return data

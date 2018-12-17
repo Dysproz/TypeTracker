@@ -7,7 +7,7 @@ from viz_functions import *
 import plotly.graph_objs as go
 
 
-data = pd.read_csv('data/typer_{}.csv'.format(str(dt.now().strftime("%Y-%m-%d"))))
+data = pd.read_csv('data/typer_2018-12-16.csv'.format(str(dt.now().strftime("%Y-%m-%d"))))
 data.columns = ['time', 'character', 'counts']
 data['time'] = pd.to_datetime(data['time'])
 # data = pd.read_csv('test_data')
@@ -26,12 +26,10 @@ app.layout = html.Div([
 
             html.H4(children='Pick the date'),
 
-            dcc.DatePickerSingle(
-                id='single-date-picker',
-                min_date_allowed=dt(2018, 12, 16),  # TODO: add a function reading files and what are the min/ max dates
-                max_date_allowed=dt(2018, 12, 16),
-                initial_visible_month=dt.now(),
-                date=dt.now().strftime("%Y-%m-%d")
+            dcc.DatePickerRange(
+                id='date-picker-range',
+                start_date=dt.now(),
+                end_date=dt.now()
             ),
 
             html.Button(id='date-submit-button', n_clicks=0, children='Submit'),
@@ -146,13 +144,13 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
 @app.callback(
     Output('selected-date', 'children'),
     [Input('date-submit-button', 'n_clicks')],
-    [State('single-date-picker', 'date')])
-def update_date(n_clicks, input_date):
-    data = pd.read_csv('data/typer_{}.csv'.format(str(input_date)))
-    data.columns = ['time', 'character', 'counts']
-    data['time'] = pd.to_datetime(data['time'])
-
-    return u'Selected date: {}'.format(str(input_date))
+    [State('date-picker-range', 'start_date'),
+     State('date-picker-range', 'end_date')])
+def update_date(n_clicks, start_date, end_date):
+    start_date = dt.strptime(str(start_date.split()[0]), '%Y-%m-%d')
+    end_date = dt.strptime(str(end_date.split()[0]), '%Y-%m-%d')
+    data = get_data_for_date_range(start_date, end_date)
+    return u'Selected date range: {start} - {end}'.format(start=str(start_date).split()[0], end=str(end_date).split()[0])
 
 
 @app.callback(
