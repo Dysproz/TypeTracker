@@ -86,6 +86,8 @@ class DataSaver:
             data = self.recorder.get_data().copy()
             for key, value in data.iteritems():
                 csv_writer.writerow([time, key, value])
+            if len(data) == 0:
+                csv_writer.writerow([time, 'Key.enter', 0])
         print('Data saved to typer_{date} for {time}'.format(date=date, time=time))
         self.recorder.clear_data()
 
