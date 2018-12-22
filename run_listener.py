@@ -47,7 +47,7 @@ class KeyListener:
                 '<269025027>': 'Key.brightnes_down',
                 '<269025167>': 'Key.no_camera',
                 '<0>': 'Key.airplane',
-                '<269025202>' : 'Key.close_window',
+                '<269025202>': 'Key.close_window',
                 '<269025043>': 'Key.volume_up',
                 '<269025041>': 'Key.volume_down',
                 '<269025042>': 'Key.mute',
@@ -56,11 +56,12 @@ class KeyListener:
                 '<269025044>': 'Key.play_pause'
                 }
 
+
 class MouseListener:
     def __init__(self, recorder):
         self.recorder = recorder
 
-    def on_click_mouse(self, x ,y ,button, pressed):
+    def on_click_mouse(self, x, y, button, pressed):
         if not pressed:
             self.recorder.append_data(button)
 

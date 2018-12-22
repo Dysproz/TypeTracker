@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime
-import sys
 import os
 
 
@@ -49,6 +48,7 @@ class DataHolder:
     def data(self):
         return self.get_data_for_date_range(self.start_date, self.end_date)
 
+
 def get_total_seconds_series(timeseries):
     return 3600*timeseries.dt.hour + \
            60*timeseries.dt.minute + \
@@ -60,10 +60,12 @@ def get_total_seconds_timestamp(timeseries):
            60*timeseries.minute + \
            timeseries.second
 
+
 def proper_timestamp(time):
     time = int(time)
     time_formated = datetime.fromtimestamp(time // 1000000000)
     return time_formated
+
 
 def get_data_within_time(df, min_time='00:00:00', max_time='23:59:59'):
     """
@@ -79,8 +81,9 @@ def get_average_typing_speed_overall(df_filtered):
     """
     calculate average typing speed of all characters in characters per minute
     """
+    data_window = 60
     try:
-        time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + 60  # 60 is the 60 of gathering data
+        time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + data_window
     except ValueError:
         time_diff = 0
         return 0

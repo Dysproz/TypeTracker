@@ -127,7 +127,7 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
             x=x,
             y=y,
             text=x,
-            textposition= 'auto',
+            textposition='auto',
             marker=dict(
                 color='rgb(158,202,225)',
                 line=dict(
@@ -154,7 +154,8 @@ def update_date(n_clicks, start_date, end_date):
     start_date = dt.strptime(str(start_date.split()[0]), '%Y-%m-%d')
     end_date = dt.strptime(str(end_date.split()[0]), '%Y-%m-%d')
     data.set_data_ranges(start_date, end_date)
-    return u'Selected date range: {start} - {end}'.format(start=str(start_date).split()[0], end=str(end_date).split()[0])
+    return u'Selected date range: {start} - {end}'.format(start=str(start_date).split()[0],
+                                                          end=str(end_date).split()[0])
 
 
 @app.callback(
@@ -182,6 +183,7 @@ def update_typing_timesteries_typing_speed(t_n_clicks, d_n_clicks, time_from, ti
     [State('time-from', 'value'), State('time-to', 'value')])
 def update_typing_timesteries_character_use(t_n_clicks, d_n_clicks, time_from, time_to):
     return create_character_barchart(data.data, min_time=time_from, max_time=time_to)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
