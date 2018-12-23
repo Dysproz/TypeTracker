@@ -5,8 +5,9 @@ import os
 
 class DataHolder:
     def __init__(self):
-        self.start_date = datetime.strptime('2018-12-16', '%Y-%m-%d')
-        self.end_date = datetime.strptime('2018-12-15', '%Y-%m-%d')
+        self.set_data_ranges(datetime.strptime('2018-12-16', '%Y-%m-%d'),
+                             datetime.strptime('2018-12-15', '%Y-%m-%d'))
+
 
     def get_data_for_date_range(self, start, end):
         """
@@ -21,16 +22,14 @@ class DataHolder:
         selected_dates = []
         for date in files_dates:
             if date >= start and date <= end:
-                selected_dates.append(date)
+                selected_dates.append('data/typer_{date}.csv'.format(date=date.strftime('%Y-%m-%d')))
+        date_list = []
         for date in selected_dates:
-            try:
-                data
-                data.append(pd.read_csv('data/typer_{d}.csv'.format(d=date.strftime('%Y-%m-%d'))))
-            except NameError:
-                data = pd.read_csv('data/typer_{d}.csv'.format(d=date.strftime('%Y-%m-%d')))
+            date_list.append(pd.read_csv(date, header=None))
         try:
+            data = pd.concat(date_list, sort=True)
             data.columns = ['time', 'character', 'counts']
-        except UnboundLocalError:
+        except (UnboundLocalError, ValueError):
             data = pd.DataFrame(columns=['time', 'character', 'counts'])
         data['time'] = pd.to_datetime(data['time'])
         return data
@@ -42,7 +41,6 @@ class DataHolder:
             end = datetime.strptime(str(end.split()[0]), '%Y-%m-%d')
         self.start_date = start
         self.end_date = end
-        self.data
 
     @property
     def data(self):
