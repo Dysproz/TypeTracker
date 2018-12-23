@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, time
 import os
 
 
@@ -7,11 +7,9 @@ class DataHolder:
     def __init__(self):
         self.set_data_ranges(datetime.strptime('2018-12-16', '%Y-%m-%d'),
                              datetime.strptime('2018-12-15', '%Y-%m-%d'))
+        self.set_time_ranges('00:00:00', '23:59:59')
 
-    def get_data_for_date_range(self, start, end):
-        """
-        Iterate through data filenames and get files that match date range
-        """
+    def get_data(self, start, end):
         path = './data'
         files = [i for i in os.listdir(path) if i.startswith('typer_')]
         files_dates = []
@@ -31,7 +29,13 @@ class DataHolder:
         except (UnboundLocalError, ValueError):
             data = pd.DataFrame(columns=['time', 'character', 'counts'])
         data['time'] = pd.to_datetime(data['time'])
+
+
         return data
+
+    def set_time_ranges(self, time_from, time_to):
+        self.time_from = time_from
+        self.time_to = time_to
 
     def set_data_ranges(self, start, end):
         if isinstance(start, basestring):
@@ -41,43 +45,34 @@ class DataHolder:
         self.start_date = start
         self.end_date = end
 
+    def get_data_within_time(self):
+        total_min = self.get_total_seconds_timestamp(pd.to_datetime(self.time_from))
+        total_max = self.get_total_seconds_timestamp(pd.to_datetime(self.time_to))
+        df_seconds = self.get_total_seconds_series(self.data['time'])
+        return self.data.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
+
     @property
     def data(self):
-        return self.get_data_for_date_range(self.start_date, self.end_date)
+        return self.get_data(self.start_date, self.end_date)
 
+    @staticmethod
+    def get_total_seconds_timestamp(timeseries):
+        return 3600*timeseries.hour + \
+               60*timeseries.minute + \
+               timeseries.second
 
-def get_total_seconds_series(timeseries):
-    return 3600*timeseries.dt.hour + \
-           60*timeseries.dt.minute + \
-           timeseries.dt.second
-
-
-def get_total_seconds_timestamp(timeseries):
-    return 3600*timeseries.hour + \
-           60*timeseries.minute + \
-           timeseries.second
-
+    @staticmethod
+    def get_total_seconds_series(timeseries):
+        return 3600*timeseries.dt.hour + \
+               60*timeseries.dt.minute + \
+               timeseries.dt.second
 
 def proper_timestamp(time):
     time = int(time)
     time_formated = datetime.fromtimestamp(time // 1000000000)
     return time_formated
 
-
-def get_data_within_time(df, min_time='00:00:00', max_time='23:59:59'):
-    """
-    get all data within specified time
-    """
-    total_min = get_total_seconds_timestamp(pd.to_datetime(min_time))
-    total_max = get_total_seconds_timestamp(pd.to_datetime(max_time))
-    df_seconds = get_total_seconds_series(df['time'])
-    return df.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
-
-
 def get_average_typing_speed_overall(df_filtered):
-    """
-    calculate average typing speed of all characters in characters per minute
-    """
     data_window = 60
     try:
         time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + data_window
@@ -89,11 +84,6 @@ def get_average_typing_speed_overall(df_filtered):
 
 
 def get_typing_speed_over_time(df_filtered):
-    """
-    get data on typing speed over time
-    :param df_filtered:
-    :return:
-    """
     times = sorted(df_filtered['time'].unique())
     cpm = []
     times_formated = []
@@ -104,12 +94,8 @@ def get_typing_speed_over_time(df_filtered):
 
 
 def get_character_sum(df_filtered):
-    """
-    get sum of typing specific characters
-    """
     characters = sorted(df_filtered['character'].unique())
     counts = []
     for character in characters:
         counts.append(sum(df_filtered.loc[df_filtered['character'] == character, 'counts']))
-
     return characters, counts

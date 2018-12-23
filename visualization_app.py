@@ -69,7 +69,7 @@ app.layout = html.Div([
             html.Div(
                 id='typing-speed-summary',
                 children='Average typing speed: {: .2f} Characters Per Minute.'.format(
-                    functions.get_average_typing_speed_overall(functions.get_data_within_time(data.data))
+                    functions.get_average_typing_speed_overall(data.get_data_within_time())
                 )),
             # TODO: add info button
 
@@ -103,8 +103,7 @@ app.layout = html.Div([
 
 
 def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[]):
-    x, y = functions.get_typing_speed_over_time(
-                functions.get_data_within_time(data_in, min_time=min_time, max_time=max_time))
+    x, y = functions.get_typing_speed_over_time(data.get_data_within_time())
     return{
         'data': [go.Scatter(
             x=x,
@@ -120,8 +119,7 @@ def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[
 
 
 def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=[]):
-    x, y = functions.get_character_sum(
-                functions.get_data_within_time(data_in, min_time=min_time, max_time=max_time))
+    x, y = functions.get_character_sum(data.get_data_within_time())
     return{
         'data': [go.Bar(
             x=x,
@@ -163,7 +161,7 @@ def update_date(n_clicks, start_date, end_date):
     [Input('time-submit-button', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
 def update_time(n_clicks, time_from, time_to):
-    # TODO: add restraints on the min and max range and handle the errors
+    data.set_time_ranges(time_from=time_from, time_to=time_to)
     return u'Analysis between {} and {}'.format(time_from, time_to)
 
 
