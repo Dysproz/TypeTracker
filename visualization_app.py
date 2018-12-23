@@ -3,10 +3,10 @@ import dash_core_components as dcc
 import dash_html_components as html
 from datetime import datetime as dt
 from dash.dependencies import Input, Output, State
-from viz_functions import *
+import tools.functions as functions
 import plotly.graph_objs as go
 
-data = DataHolder()
+data = functions.DataHolder()
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -69,7 +69,7 @@ app.layout = html.Div([
             html.Div(
                 id='typing-speed-summary',
                 children='Average typing speed: {: .2f} Characters Per Minute.'.format(
-                    get_average_typing_speed_overall(get_data_within_time(data.data))
+                    functions.get_average_typing_speed_overall(functions.get_data_within_time(data.data))
                 )),
             # TODO: add info button
 
@@ -103,8 +103,8 @@ app.layout = html.Div([
 
 
 def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[]):
-    x, y = get_typing_speed_over_time(
-                get_data_within_time(data_in, min_time=min_time, max_time=max_time))
+    x, y = functions.get_typing_speed_over_time(
+                functions.get_data_within_time(data_in, min_time=min_time, max_time=max_time))
     return{
         'data': [go.Scatter(
             x=x,
@@ -120,8 +120,8 @@ def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[
 
 
 def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=[]):
-    x, y = get_character_sum(
-                get_data_within_time(data_in, min_time=min_time, max_time=max_time))
+    x, y = functions.get_character_sum(
+                functions.get_data_within_time(data_in, min_time=min_time, max_time=max_time))
     return{
         'data': [go.Bar(
             x=x,

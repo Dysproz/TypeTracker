@@ -90,7 +90,7 @@ class DataSaver:
             if len(data) == 0:
                 csv_writer.writerow([time, 'Key.enter', 0])
             else:
-                minute_ahead=str((date_time+timedelta(seconds=60)).strftime('%d-%m-%Y %H:%M:%S'))
+                minute_ahead = str((date_time+timedelta(seconds=60)).strftime('%d-%m-%Y %H:%M:%S'))
                 csv_writer.writerow([minute_ahead, 'Key.enter', 0])
         print('Data saved to typer_{date} for {time}'.format(date=date, time=time))
         self.recorder.clear_data()

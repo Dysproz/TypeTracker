@@ -8,7 +8,6 @@ class DataHolder:
         self.set_data_ranges(datetime.strptime('2018-12-16', '%Y-%m-%d'),
                              datetime.strptime('2018-12-15', '%Y-%m-%d'))
 
-
     def get_data_for_date_range(self, start, end):
         """
         Iterate through data filenames and get files that match date range
