@@ -25,12 +25,10 @@ class DataHolder:
             date_list.append(pd.read_csv(date, header=None))
         try:
             data = pd.concat(date_list, sort=True)
-            data.columns = ['time', 'character', 'counts']
+            data.columns = ['time', 'character', 'counts', 'type']
         except (UnboundLocalError, ValueError):
-            data = pd.DataFrame(columns=['time', 'character', 'counts'])
+            data = pd.DataFrame(columns=['time', 'character', 'counts', 'type'])
         data['time'] = pd.to_datetime(data['time'])
-
-
         return data
 
     def set_time_ranges(self, time_from, time_to):
