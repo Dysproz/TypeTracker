@@ -8,14 +8,14 @@ First app is typing listener. Every minute it logs total number of characters pr
 App does not register order of typed character - only summarized counts of every character and saves it to .csv file.
 Ex. of basic data log:
 ```
-| Date               | Key | Counts |
-| ------------------ | --- | ------ |
-|16-12-2018 15:00:00 | k   | 30     |
-|16-12-2018 15:00:00 | e   | 43     |
-|16-12-2018 15:00:00 | 5   | 12     |
-|16-12-2018 15:01:00 | k   | 22     |
-|16-12-2018 15:01:00 | 1   | 4      |
-|16-12-2018 15:01:00 | =   | 123    |
+| Date               | Key | Counts |Type|
+| ------------------ | --- | ------ |----|
+|16-12-2018 15:00:00 | k   | 30     |  k |
+|16-12-2018 15:00:00 | e   | 43     |  k |
+|16-12-2018 15:00:00 | 5   | 12     |  k |
+|16-12-2018 15:01:00 | k   | 22     |  k |
+|16-12-2018 15:01:00 | 1   | 4      |  k |
+|16-12-2018 15:01:00 | =   | 123    |  k |
 ```
 
 Second app is a vizualization website hosted with Flask and Dash. 
