@@ -45,7 +45,7 @@ python2 listener_app.py
 ```
 Ex. Running script and pushing it to background process
 ```
-python2 listener_app.py &
+nohup python2 listener_app.py &
 ```
 ## Running Vizualization
 In order to run dash server with vizualization use
