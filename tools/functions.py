@@ -47,7 +47,8 @@ class DataHolder:
         total_min = self.get_total_seconds_timestamp(pd.to_datetime(self.time_from))
         total_max = self.get_total_seconds_timestamp(pd.to_datetime(self.time_to))
         df_seconds = self.get_total_seconds_series(self.data['time'])
-        return self.data.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
+        result = self.data.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
+        return result
 
     @property
     def data(self):
@@ -70,15 +71,14 @@ def proper_timestamp(time):
     time_formated = datetime.fromtimestamp(time // 1000000000)
     return time_formated
 
-def get_average_typing_speed_overall(df_filtered):
-    data_window = 60
+def get_average_typing_speed_overall(data):
     try:
-        time_diff = (max(df_filtered['time']) - min(df_filtered['time'])).total_seconds() + data_window
+        time_diff = (max(data['time']) - min(data['time'])).total_seconds()
     except ValueError:
         time_diff = 0
         return 0
 
-    return sum(df_filtered['counts'])/(time_diff/60.)
+    return sum(data['counts'])/(time_diff/60.)
 
 
 def get_typing_speed_over_time(df_filtered):

@@ -66,11 +66,7 @@ app.layout = html.Div([
         html.Div([  # TODO: add callback functions to get average speed and mouse use
             html.H3(children='Summary'),
 
-            html.Div(
-                id='typing-speed-summary',
-                children='Average typing speed: {: .2f} Characters Per Minute.'.format(
-                    functions.get_average_typing_speed_overall(data.get_data_within_time())
-                )),
+            html.Div(id='typing-speed-summary'),
             # TODO: add info button
 
             html.Div(id='mouse-use-summary')
@@ -101,6 +97,10 @@ app.layout = html.Div([
     ])
 ])
 
+
+def create_summary_section():
+    return 'Average typing speed: {: .2f} Characters Per Minute.'.format(
+           functions.get_average_typing_speed_overall(data.get_data_within_time()))
 
 def create_typing_timeseries(data_in, min_time, max_time, axist_type=[], title=[]):
     x, y = functions.get_typing_speed_over_time(data.get_data_within_time())
@@ -141,6 +141,15 @@ def create_character_barchart(data_in, min_time, max_time, axist_type=[], title=
 
         }
     }
+
+
+@app.callback(
+    Output('typing-speed-summary', 'children'),
+    [Input('time-submit-button', 'n_clicks'),
+     Input('date-submit-button', 'n_clicks')],
+)
+def update_summary(d_n_clicks, t_n_clicks):
+    return create_summary_section()
 
 
 @app.callback(
