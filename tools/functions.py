@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime, time
+from datetime import datetime
 import os
 
 
@@ -66,10 +66,12 @@ class DataHolder:
                60*timeseries.dt.minute + \
                timeseries.dt.second
 
+
 def proper_timestamp(time):
     time = int(time)
     time_formated = datetime.fromtimestamp(time // 1000000000)
     return time_formated
+
 
 def get_average_typing_speed_overall(data):
     try:
@@ -77,8 +79,18 @@ def get_average_typing_speed_overall(data):
     except ValueError:
         time_diff = 0
         return 0
-
     return sum(data['counts'])/(time_diff/60.)
+
+
+def get_percentage_usage_of_mouse_keyboard(data):
+    total_records = float(sum(data['counts']))
+    mouse_records = float(sum(data.loc[data['type'] == 'm', 'counts']))
+    keyboard_records = float(sum(data.loc[data['type'] == 'k', 'counts']))
+    if total_records != 0:
+        return round(mouse_records/total_records*100, 2),\
+               round(keyboard_records/total_records*100, 2)
+    else:
+        return 0, 0
 
 
 def get_typing_speed_over_time(df_filtered):
