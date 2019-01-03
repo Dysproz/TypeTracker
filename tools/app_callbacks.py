@@ -80,7 +80,7 @@ def tab_render(tab):
                     html.Div(id='device-usage-summary'),
 
                     html.Button(id='refresh', n_clicks=0, children='Refresh'),
-                ])
+                ], style={'text-align': 'center'})
 
     elif tab == 'cpm-tab':
         return html.Div([
@@ -91,7 +91,7 @@ def tab_render(tab):
                     ),
 
                     html.Button(id='refresh', n_clicks=0, children='Refresh')
-                    ])
+                    ], style={'text-align': 'center'})
 
     elif tab == 'character-use-tab':
         return html.Div([
@@ -104,4 +104,4 @@ def tab_render(tab):
                     ]),
 
                     html.Button(id='refresh', n_clicks=0, children='Refresh')
-                ])
+                ], style={'text-align': 'center'})
