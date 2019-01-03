@@ -18,10 +18,11 @@ Ex. of basic data log:
 |16-12-2018 15:01:00 | =   | 123    |  k |
 ```
 
-Second app is a vizualization website hosted with Flask and Dash. 
+Second app is a vizualization website hosted with Flask and Dash.
 Application works as http server on localhost.
-![GUI](https://github.com/Dysproz/TypeTracker/blob/master/images/gui1.png)
-![GUI](https://github.com/Dysproz/TypeTracker/blob/master/images/gui2.png)
+![GUI](https://github.com/Dysproz/TypeTracker/blob/master/images/gui_summary.png)
+![GUI](https://github.com/Dysproz/TypeTracker/blob/master/images/gui_cpm.png)
+![GUI](https://github.com/Dysproz/TypeTracker/blob/master/images/gui_character_use.png)
 Choose date that you want to analize and range of time.
 Afterwards you should see two graphs.
 One graph shows characters per minute - how many character you typed every minute, so it's possible to measure work performance.
