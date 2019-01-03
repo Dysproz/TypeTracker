@@ -1,6 +1,8 @@
 from datetime import datetime as dt
 import tools.functions as functions
 import plotly.graph_objs as go
+import dash_core_components as dcc
+import dash_html_components as html
 
 
 def create_summary_section_cpm(data):
@@ -66,3 +68,40 @@ def update_data_date_ranges(data, start_date, end_date):
 def update_data_time_ranges(data, time_from, time_to):
     data.set_time_ranges(time_from=time_from, time_to=time_to)
     return u'Analysis between {} and {}'.format(time_from, time_to)
+
+
+def tab_render(tab):
+    if tab == 'summary-tab':
+        return html.Div([
+                    html.H3(children='Summary'),
+
+                    html.Div(id='typing-speed-summary'),
+
+                    html.Div(id='device-usage-summary'),
+
+                    html.Button(id='refresh', n_clicks=0, children='Refresh'),
+                ])
+
+    elif tab == 'cpm-tab':
+        return html.Div([
+                    html.H4(children='Typing speed in CPM over time.'),
+
+                    dcc.Graph(
+                        id='typing-speed-timeseries',
+                    ),
+
+                    html.Button(id='refresh', n_clicks=0, children='Refresh')
+                    ])
+
+    elif tab == 'character-use-tab':
+        return html.Div([
+                    html.H4(children='Character use within selected time.'),
+
+                    html.Div([
+                        dcc.Graph(
+                            id='character-use'
+                        )
+                    ]),
+
+                    html.Button(id='refresh', n_clicks=0, children='Refresh')
+                ])

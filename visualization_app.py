@@ -11,6 +11,7 @@ data = functions.DataHolder()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.config['suppress_callback_exceptions'] = True
 
 app.layout = html.Div([
     html.Div([
@@ -62,55 +63,41 @@ app.layout = html.Div([
             html.Div(id='selected-time')
         ]),
 
-        # Summary section
         html.Div([
-            html.H3(children='Summary'),
-
-            html.Div(id='typing-speed-summary'),
-
-            html.Div(id='device-usage-summary')
-        ]),
-
-        # Graphs
-        html.Div([
-            html.Div([
-                html.H4(children='Typing speed in CPM over time.'),
-
-                dcc.Graph(
-                    id='typing-speed-timeseries',
-                )]),
-
-            html.Div([
-                html.H4(children='Character use within selected time.'),
-
-                html.Div([
-                    dcc.Graph(
-                        id='character-use'
-                    )
-                ])
-            ])
-
+            dcc.Tabs(id="tabs", value='tab-1', children=[
+                dcc.Tab(label='Summary', value='summary-tab'),
+                dcc.Tab(label='CPM graph', value='cpm-tab'),
+                dcc.Tab(label='Character use', value='character-use-tab'),
+                ]),
+            html.Div(id='tabs-content')
         ])
-
     ])
 ])
+
+
+@app.callback(Output('tabs-content', 'children'),
+              [Input('tabs', 'value')])
+def render_content(tab):
+    return callbacks.tab_render(tab)
 
 
 @app.callback(
     Output('typing-speed-summary', 'children'),
     [Input('time-submit-button', 'n_clicks'),
-     Input('date-submit-button', 'n_clicks')],
+     Input('date-submit-button', 'n_clicks'),
+     Input('refresh', 'n_clicks')],
 )
-def update_summary_cpm(d_n_clicks, t_n_clicks):
+def update_summary_cpm(d_n_clicks, t_n_clicks, refresh_click):
     return callbacks.create_summary_section_cpm(data)
 
 
 @app.callback(
     Output('device-usage-summary', 'children'),
     [Input('time-submit-button', 'n_clicks'),
-     Input('date-submit-button', 'n_clicks')],
+     Input('date-submit-button', 'n_clicks'),
+     Input('refresh', 'n_clicks')],
 )
-def update_summary_device_usage(d_n_clicks, t_n_clicks):
+def update_summary_device_usage(d_n_clicks, t_n_clicks, refresh_click):
     return callbacks.create_summary_section_device_percentage(data)
 
 
@@ -134,18 +121,20 @@ def update_time(n_clicks, time_from, time_to):
 @app.callback(
     Output('typing-speed-timeseries', 'figure'),
     [Input('time-submit-button', 'n_clicks'),
-     Input('date-submit-button', 'n_clicks')],
+     Input('date-submit-button', 'n_clicks'),
+     Input('refresh', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries_typing_speed(t_n_clicks, d_n_clicks, time_from, time_to):
+def update_typing_timesteries_typing_speed(t_n_clicks, d_n_clicks, refresh_click, time_from, time_to):
     return callbacks.create_typing_timeseries(data=data)
 
 
 @app.callback(
     Output('character-use', 'figure'),
     [Input('time-submit-button', 'n_clicks'),
-     Input('date-submit-button', 'n_clicks')],
+     Input('date-submit-button', 'n_clicks'),
+     Input('refresh', 'n_clicks')],
     [State('time-from', 'value'), State('time-to', 'value')])
-def update_typing_timesteries_character_use(t_n_clicks, d_n_clicks, time_from, time_to):
+def update_typing_timesteries_character_use(t_n_clicks, d_n_clicks, refresh_click, time_from, time_to):
     return callbacks.create_character_barchart(data)
 
 
