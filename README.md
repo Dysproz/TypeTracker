@@ -27,6 +27,8 @@ Afterwards you should see two graphs.
 One graph shows characters per minute - how many character you typed every minute, so it's possible to measure work performance.
 Second graph show how often was used every key. For example for writting in English the most common letter is 'e'.
 
+Although, there's summary section where you can check on average how many characters per minute you type and how you use keyboard and mouse in percents.
+
 
 ## Installation
 Project is designed for Python2.7.
