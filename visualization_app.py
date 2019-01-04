@@ -1,7 +1,4 @@
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
-from datetime import datetime as dt
 from dash.dependencies import Input, Output, State
 import tools.functions as functions
 import tools.app_callbacks as callbacks
@@ -12,76 +9,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.config['suppress_callback_exceptions'] = True
-
-app.layout = html.Div([
-    html.Div([
-        html.H1(children='TypeTracker', style={'text-align': 'center',
-                                               'font': 'helvetica',
-                                               'color': '#327DFF'}),
-
-        # Date Selector
-        html.Div([
-            html.H4(children='Pick the date'),
-
-            dcc.DatePickerRange(
-                id='date-picker-range',
-                start_date=dt.now(),
-                end_date=dt.now()
-            ),
-
-            html.Div([
-                html.Button(id='date-submit-button', n_clicks=0, children='Submit')
-                ], style={'padding': '10px'}),
-
-            html.Div(id='selected-date')
-        ], style={'width': '49%',
-                  'display': 'inline-block',
-                  'text-align': 'center',
-                  'vertical-align': 'text-top'}),
-
-        # Time Selector
-        html.Div([
-             html.H4(children='Pick the time range'),
-             html.Div([
-                  html.H6(children='From: '),
-
-                  dcc.Input(
-                    id='time-from',
-                    type='time',
-                    placeholder='HH:MM:SS',
-                    value='00:00:00',
-                    n_submit=0
-                  ),
-
-                  html.H6(children='To: '),
-
-                  dcc.Input(
-                    id='time-to',
-                    type='time',
-                    placeholder='HH:MM:SS',
-                    value='23:59:59',
-                    n_submit=0
-                  )], style={'columnCount': 2}),
-
-             html.Button(id='time-submit-button', n_clicks=0, children='Submit'),
-
-             html.Div(id='selected-time')
-            ], style={'width': '49%',
-                      'display': 'inline-block',
-                      'text-align': 'center',
-                      'vertical-align': 'text-top'}),
-
-        # Tabs
-        html.Div([
-            dcc.Tabs(id="tabs", value='tab-1', children=[
-                dcc.Tab(label='Summary', value='summary-tab'),
-                dcc.Tab(label='CPM graph', value='cpm-tab'),
-                dcc.Tab(label='Character use', value='character-use-tab'),
-                ]),
-            html.Div(id='tabs-content')
-        ])
-    ])
-])
+app.title = "TypeTracker"
+app.layout = callbacks.get_layout()
 
 
 @app.callback(Output('tabs-content', 'children'),
