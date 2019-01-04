@@ -1,5 +1,5 @@
 # TypeTracker
-by Szymon Krasuski and Hanna Nykowska
+by [Szymon Krasuski](https://github.com/Dysproz) and [Hanna Nykowska](https://github.com/hannyk)
 
 # Idea
 This project contain 2 pretty independent apps.
