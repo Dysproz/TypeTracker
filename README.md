@@ -44,18 +44,18 @@ In order to run listener that should run during the time you want to collect dat
 run listener_app.py script.
 Ex.
 ```
-python2 listener_app.py
+python3 listener_app.py
 ```
 Ex. Running script and pushing it to background process
 ```
-nohup python2 listener_app.py &
+nohup python3 listener_app.py &
 ```
 ## Running Vizualization
 In order to run dash server with vizualization use
 visualization_app.py script.
 Ex.
 ```
-python2 visualization_app.py
+python3 visualization_app.py
 ```
 Afterwards, in your web browser, enter 127.0.0.1:8050.
 You should see UI to draw fantastic graphs.
