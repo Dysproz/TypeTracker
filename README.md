@@ -32,7 +32,7 @@ Although, there's summary section where you can check on average how many charac
 
 
 ## Installation
-Project is designed for Python2.7.
+Project is designed for Python3.6.
 In order to install required packages use requirements.txt file.
 Command:
 ```

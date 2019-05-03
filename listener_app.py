@@ -97,9 +97,9 @@ class DataSaver:
             csv_writer = csv.writer(log_file, delimiter=',')
             data_keyboard = self.recorder.get_data_keyboard().copy()
             data_mouse = self.recorder.get_data_mouse().copy()
-            for key, value in data_keyboard.iteritems():
+            for key, value in data_keyboard.items():
                 csv_writer.writerow([time, key, value, 'k'])
-            for key, value in data_mouse.iteritems():
+            for key, value in data_mouse.items():
                 csv_writer.writerow([time, key, value, 'm'])
             if len(data_keyboard) == 0 and len(data_mouse) == 0:
                 csv_writer.writerow([time, 'Key.enter', 0])

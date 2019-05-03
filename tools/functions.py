@@ -36,16 +36,16 @@ class DataHolder:
         self.time_to = time_to
 
     def set_data_ranges(self, start, end):
-        if isinstance(start, basestring):
+        if isinstance(start, str):
             start = datetime.strptime(str(start.split()[0]), '%Y-%m-%d')
-        if isinstance(end, basestring):
+        if isinstance(end, str):
             end = datetime.strptime(str(end.split()[0]), '%Y-%m-%d')
         self.start_date = start
         self.end_date = end
 
     def get_data_within_time(self):
-        total_min = self.get_total_seconds_timestamp(pd.to_datetime(self.time_from))
-        total_max = self.get_total_seconds_timestamp(pd.to_datetime(self.time_to))
+        total_min = self.time_from*60
+        total_max = self.time_to*60
         df_seconds = self.get_total_seconds_series(self.data['time'])
         result = self.data.loc[(df_seconds >= total_min) & (df_seconds <= total_max), :]
         return result

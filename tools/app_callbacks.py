@@ -36,25 +36,14 @@ def get_layout():
                     html.Div([
                         html.H4(children='Pick the time range'),
                         html.Div([
-                            html.H6(children='From: '),
-
-                            dcc.Input(
-                                id='time-from',
-                                type='time',
-                                placeholder='HH:MM:SS',
-                                value='00:00:00',
-                                n_submit=0
-                            ),
-
-                            html.H6(children='To: '),
-
-                            dcc.Input(
-                                id='time-to',
-                                type='time',
-                                placeholder='HH:MM:SS',
-                                value='23:59:59',
-                                n_submit=0
-                            )], style={'columnCount': 2}),
+                            dcc.RangeSlider(
+                                id='time_slider',
+                                count=1,
+                                min=0,
+                                max=23*60+59,
+                                step=1,
+                                value=[0, 23*60+59]
+                            )]),
 
                         html.Button(id='time-submit-button', n_clicks=0, children='Submit'),
 
@@ -138,9 +127,12 @@ def update_data_date_ranges(data, start_date, end_date):
                                                           end=str(end_date).split()[0])
 
 
-def update_data_time_ranges(data, time_from, time_to):
-    data.set_time_ranges(time_from=time_from, time_to=time_to)
-    return u'Analysis between {} and {}'.format(time_from, time_to)
+def update_data_time_ranges(data, value):
+    data.set_time_ranges(time_from=value[0], time_to=value[1])
+    return u'Analysis between {}:{} and {}:{}'.format(int(value[0]/60),
+                                                      int(value[0] % 60),
+                                                      int(value[1]/60),
+                                                      int(value[1] % 60))
 
 
 def tab_render(tab):
